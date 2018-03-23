@@ -27,7 +27,15 @@ public class GestionErreurs {
 
 		if (sSingleton == null) {
 			final ClassLoader lClassLoader = Thread.currentThread().getContextClassLoader();
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println(lClassLoader.getResource(pMsgErreursPath).getPath().toString());
+			System.out.println();
+			System.out.println();
+			System.out.println();
 			final InputStream lInputStream = lClassLoader.getResourceAsStream(pMsgErreursPath);
+			
 			if (lInputStream != null) {
 				try {
 					sSingleton = new GestionErreurs(new PropertyResourceBundle(lInputStream));
@@ -35,6 +43,8 @@ public class GestionErreurs {
 				} catch (final IOException e) {
 					logger.error("Erreur lors de l'initialisation de la couche de gestion des erreurs '" + pMsgErreursPath + "'", e);
 				}
+			} else {
+				logger.error("Le fichier '" + pMsgErreursPath + "' est introuvable");
 			}
 		}
 
@@ -69,7 +79,7 @@ public class GestionErreurs {
 	}
 
 	public static void main(String[] args) {
-		GestionErreurs.initialize("msgErreurs.properties");
+		GestionErreurs.initialize("error_messages.properties");
 		System.out.println(GestionErreurs.getInstance().getMessageErreur(ErreurCode.CODE_ERREUR_0001, "test"));
 		System.out.println(GestionErreurs.getInstance().getMessageErreur(ErreurCode.CODE_RETOUR_OK));
 	}

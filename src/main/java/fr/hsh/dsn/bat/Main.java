@@ -7,6 +7,8 @@ import java.util.Properties;
 
 import org.hibernate.HibernateException;
 
+import fr.hsh.utils.ApplicativeProperties;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -21,8 +23,10 @@ public class Main {
 		try {
 			lAppProperties.load(new FileInputStream(lConfPath));
 			for (Object lName : lAppProperties.keySet()) {
-				String lValue = lAppProperties.getProperty((String)lName);
-				System.setProperty((String)lName, lValue);
+				if (ApplicativeProperties.LOG_CONF_PATH.toString().equals(lName)) {
+					String lValue = lAppProperties.getProperty((String)lName);
+					System.setProperty((String)lName, lValue);
+				}
 			}
 
 			System.exit(LoadParserDSN.run(lConfPath).value);

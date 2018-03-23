@@ -52,6 +52,23 @@ public class Bloc extends Component {
 		return this.orderedNestedSectionList;
 	}
 
+	private List<Bloc> getSubBlocList() {
+		List<Bloc> lBlocScope = null;
+		if (this.orderedNestedBlocList.isEmpty()) {
+			lBlocScope = new ArrayList<Bloc>();
+		} else {
+			for(Bloc lSubBloc : this.orderedNestedBlocList) {
+				if (lBlocScope == null) {
+					lBlocScope = lSubBloc.getSubBlocList();
+				} else {
+					lBlocScope.addAll(lSubBloc.getSubBlocList());
+				}
+			}
+		}
+		lBlocScope.add(this);
+		return lBlocScope;
+	}
+
 	@Override
 	public ComponentType getType() {
 		return ComponentType.Bloc;

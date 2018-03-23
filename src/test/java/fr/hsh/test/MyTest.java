@@ -1,6 +1,6 @@
 package fr.hsh.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,8 +16,24 @@ import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
+import org.slf4j.LoggerFactory;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.util.StatusPrinter;
+import fr.hsh.dsn.errors.GestionErreurs;
+import fr.hsh.dsn.exception.GrammarViolationException;
+import fr.hsh.dsn.exception.NoGrammarFoundException;
+import fr.hsh.dsn.exception.ParseException;
+import fr.hsh.dsn.parser.DSNParser;
+import fr.hsh.dsn.parser.DSNParserFactory;
+import fr.hsh.dsn.parser.handler.IContentHandler;
+import fr.hsh.dsn.parser.handler.writer.ContentHandlerFactory;
+import fr.hsh.utils.DateUtils;
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MyTest {
 	
 	@Before
@@ -29,7 +45,7 @@ public class MyTest {
 	}
 	
 	@Test
-	public void test() {
+	public void testLoadGrammarInDB() {
 		String database = "/home/nta/views/git/DSN/parser-dsn/src/test/resources/HSQLDB/DB";
 
 		try {
@@ -74,5 +90,38 @@ public class MyTest {
 			fail(e.getMessage());
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void testParseDSN() {
+		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		// print logback's internal status
+		StatusPrinter.print(lc);
+		
+		GestionErreurs.initialize("error_messages.properties");
+		if (GestionErreurs.isInitialized()) {
+			DateUtils.initialize("yyyyMMdd");
+		}
+		
+		String lDsnVersion = "V01";
+		String lFileName = "tstDSN_NTA_3";
+		
+		DSNParserFactory lParserFactory = null;
+		DSNParser lParser = null;
+		IContentHandler xmlWriter = ContentHandlerFactory.getXmlWriter();
+		
+		try {
+			lParserFactory = DSNParserFactory.newInstance(lDsnVersion);
+			lParser = lParserFactory.newDSNParser();
+		} catch (NoGrammarFoundException e) {
+			e.printStackTrace();
+		}
+
+		try (InputStream lIs = MyTest.class.getClassLoader().getResourceAsStream(lFileName)) {
+			lParser.parse(lIs, "UTF-8", xmlWriter);
+		} catch (GrammarViolationException | ParseException | IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

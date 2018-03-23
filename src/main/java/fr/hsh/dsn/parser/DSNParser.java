@@ -212,8 +212,8 @@ public class DSNParser {
 			logger.error("Erreur ligne {}: {}", nbLine, e.getMessage());
 			logger.error("Error when reading BufferedReader new line - ", e);
 		} catch (GrammarViolationException e) {
-			logger.error("{} - Erreur ligne {}",  e.getLogId().toString(), nbLine);
-			throw new GrammarViolationException(e.getCode(), "Erreure Ligne - "+nbLine+" - "+e.getLibelleCourt(), e);
+			logger.error("{} - Erreur ligne {}: {}", new Object[] {e.getLogId().toString(), nbLine, e.getMessage()});
+			throw new GrammarViolationException(e.getCode(), "Erreure Ligne - "+nbLine+" - "+e.getShortLabel(), e);
 		} finally {
 			try {
 				br.close();
