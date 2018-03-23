@@ -3,6 +3,7 @@ package fr.hsh.dsn.errors;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
@@ -11,18 +12,43 @@ import org.slf4j.LoggerFactory;
 
 public class ErrorsManager {
 
-	private static final Logger				logger		= LoggerFactory.getLogger(ErrorsManager.class);
+	private static final Logger		logger		= LoggerFactory.getLogger(ErrorsManager.class);
 
-	private static ErrorsManager			sSingleton	= null;
-	private static boolean					sInit		= false;
+	private static ErrorsManager	sSingleton	= null;
+	private static boolean			sInit		= false;
 
-	private final PropertyResourceBundle	mBundle;
+	private final ResourceBundle	mBundle;
 
-	private ErrorsManager(final PropertyResourceBundle pBundle) {
+	private ErrorsManager(final ResourceBundle pBundle) {
 		this.mBundle = pBundle;
 	}
+	
+	public static synchronized void initialize(final Locale pLocale) {
+		logger.trace(" > initialize()");
 
-	public static synchronized void initialize(final String pMsgErreursPath) {
+		if (sSingleton == null) {
+			if (pLocale == null) {
+				sSingleton = new ErrorsManager(ResourceBundle.getBundle("errors.messages", pLocale));
+			} else {
+				sSingleton = new ErrorsManager(ResourceBundle.getBundle("errors.messages", Locale.getDefault()));
+			}
+			sInit = true;
+		}
+		
+		logger.trace(" < initialize()");
+	}
+	public static synchronized void initialize() {
+		logger.trace(" > initialize()");
+
+		if (sSingleton == null) {
+			sSingleton = new ErrorsManager(ResourceBundle.getBundle("errors.messages", Locale.getDefault()));
+			sInit = true;
+		}
+		
+		logger.trace(" < initialize()");
+	}
+	
+	public static synchronized void initialize(final String pErrorsMsgPath) {
 		logger.trace(" > initialize()");
 
 		if (sSingleton == null) {
@@ -30,21 +56,21 @@ public class ErrorsManager {
 			System.out.println();
 			System.out.println();
 			System.out.println();
-			System.out.println(lClassLoader.getResource(pMsgErreursPath).getPath().toString());
+			System.out.println(lClassLoader.getResource(pErrorsMsgPath).getPath().toString());
 			System.out.println();
 			System.out.println();
 			System.out.println();
-			final InputStream lInputStream = lClassLoader.getResourceAsStream(pMsgErreursPath);
+			final InputStream lInputStream = lClassLoader.getResourceAsStream(pErrorsMsgPath);
 			
 			if (lInputStream != null) {
 				try {
 					sSingleton = new ErrorsManager(new PropertyResourceBundle(lInputStream));
 					sInit = true;
 				} catch (final IOException e) {
-					logger.error("Error on initializing error management stack '" + pMsgErreursPath + "'", e);
+					logger.error("Error on initializing error management stack '" + pErrorsMsgPath + "'", e);
 				}
 			} else {
-				logger.error("File '" + pMsgErreursPath + "' unreachable");
+				logger.error("File '" + pErrorsMsgPath + "' unreachable");
 			}
 		}
 
@@ -63,7 +89,7 @@ public class ErrorsManager {
 		return this.mBundle;
 	}
 
-	public String getMessageErreur(final ErrorCode pErreur, final Object... pArgs) {
+	public String getErrorMessage(final ErrorCode pErreur, final Object... pArgs) {
 		logger.trace(" > getMessageErreur()");
 		String lOutput = null;
 		ResourceBundle lMessages = this.getBundle();
@@ -79,8 +105,12 @@ public class ErrorsManager {
 	}
 
 	public static void main(String[] args) {
-		ErrorsManager.initialize("error_messages.properties");
-		System.out.println(ErrorsManager.getInstance().getMessageErreur(ErrorCode.CODE_ERREUR_0001, "test"));
-		System.out.println(ErrorsManager.getInstance().getMessageErreur(ErrorCode.CODE_RETOUR_OK));
+		ErrorsManager.initialize("errors/messages.properties");
+		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0001, "SG01.001.001", "V1"));
+		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_RETOUR_OK));
+		
+		ErrorsManager.initialize();
+		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0001, "SG01.001.001", "V1"));
+		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_RETOUR_OK));
 	}
 }

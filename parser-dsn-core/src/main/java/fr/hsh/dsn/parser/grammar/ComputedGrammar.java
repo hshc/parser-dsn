@@ -30,7 +30,7 @@ public class ComputedGrammar {
 	public Bloc getBloc(final String pBlocName) throws GrammarViolationException {
 		Bloc lBloc = this.blocMap.get(pBlocName);
 		if (lBloc == null) {
-			String error = ErrorsManager.getInstance().getMessageErreur(ErrorCode.CODE_ERREUR_0002, pBlocName, this.version);
+			String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0002, pBlocName, this.version);
 			throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0002.toString(), error);
 		}
 		return lBloc;
@@ -38,7 +38,7 @@ public class ComputedGrammar {
 	public Section getSection(final String pSectionName) throws GrammarViolationException {
 		Section lSection = this.sectionMap.get(pSectionName);
 		if (lSection == null) {
-			String error = ErrorsManager.getInstance().getMessageErreur(ErrorCode.CODE_ERREUR_0001, pSectionName, this.version);
+			String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0001, pSectionName, this.version);
 			throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0001.toString(), error);
 		}
 		return lSection;

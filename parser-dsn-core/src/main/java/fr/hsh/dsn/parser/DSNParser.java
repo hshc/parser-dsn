@@ -13,7 +13,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,7 +229,7 @@ public class DSNParser {
 
 		int lStartPayloadIndex = pCurrentLine.indexOf(separator);
 		if (lStartPayloadIndex == -1) {
-			String error = ErrorsManager.getInstance().getMessageErreur(ErrorCode.CODE_ERREUR_0009, separator);
+			String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0009, separator);
 			throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0009.toString(), error);
 		} 
 
@@ -262,24 +267,32 @@ public class DSNParser {
 
 	public static void main(String[] args) throws GrammarViolationException, NoGrammarFoundException {
 		
-		String arguments[] = args;
-		FileInputStream fstream = null;
+		String lArguments[] = args;
+		FileInputStream lFstream = null;
 		try {
-			fstream = new FileInputStream(arguments[0]);
+			lFstream = new FileInputStream(lArguments[0]);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		String lDsnVersion = "V01";
-		ComputedGrammar grammar = GrammarFactory.getGrammar(lDsnVersion);
-		DSNParser parser = new DSNParser(grammar);
+		String database = "jdbc:hsqldb:file:"+ClassLoader.getSystemResource("HSQLDB").getPath()+"/DB";
+		
+		Map<String, String> configurationOverrides = new HashMap<>();
+		configurationOverrides.put("hibernate.connection.url", database);
+		EntityManagerFactory lEmf = Persistence.createEntityManagerFactory("DSNstructures-PU", configurationOverrides);
+		GrammarFactory lGrammarFactory = new GrammarFactory(lEmf);
+		DSNParserFactory lParserFactory = new DSNParserFactory(lGrammarFactory.getGrammar(lDsnVersion));
+		lEmf.close();
+		
+		DSNParser lParser = lParserFactory.newDSNParser();
+		
 		try {
-
 			// Create the content handler
-			IContentHandler noOpHandler = new NoOpContentHandler();
+			IContentHandler lNoOpHandler = new NoOpContentHandler();
 
 			// Parse the file with the specify content handler
 			long t = System.currentTimeMillis();
-			parser.parse(fstream, "UTF-8", noOpHandler);
+			lParser.parse(lFstream, "UTF-8", lNoOpHandler);
 		} catch (SocleException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

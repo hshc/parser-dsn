@@ -11,6 +11,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
@@ -29,8 +34,9 @@ import fr.hsh.dsn.exception.NoGrammarFoundException;
 import fr.hsh.dsn.exception.ParseException;
 import fr.hsh.dsn.parser.DSNParser;
 import fr.hsh.dsn.parser.DSNParserFactory;
+import fr.hsh.dsn.parser.grammar.metamodel.GrammarFactory;
 import fr.hsh.dsn.parser.handler.IContentHandler;
-import fr.hsh.dsn.parser.handler.writer.ContentHandlerFactory;
+import fr.hsh.dsn.parser.handler.NoOpContentHandler;
 import fr.hsh.utils.DateUtils;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -46,7 +52,8 @@ public class MyTest {
 	
 	@Test
 	public void testLoadGrammarInDB() {
-		String database = "/home/nta/views/git/DSN/parser-dsn/src/test/resources/HSQLDB/DB";
+		String database = ClassLoader.getSystemResource("HSQLDB").getPath()+"/DB";
+		
 
 		try {
 			Class.forName("org.hsqldb.jdbcDriver").newInstance();
@@ -98,7 +105,7 @@ public class MyTest {
 		// print logback's internal status
 		StatusPrinter.print(lc);
 		
-		ErrorsManager.initialize("error_messages.properties");
+		ErrorsManager.initialize();
 		if (ErrorsManager.isInitialized()) {
 			DateUtils.initialize("yyyyMMdd");
 		}
@@ -108,17 +115,24 @@ public class MyTest {
 		
 		DSNParserFactory lParserFactory = null;
 		DSNParser lParser = null;
-		IContentHandler xmlWriter = ContentHandlerFactory.getXmlWriter();
+		IContentHandler noOpHandler = new NoOpContentHandler();
 		
 		try {
-			lParserFactory = DSNParserFactory.newInstance(lDsnVersion);
+			String database = "jdbc:hsqldb:file:"+ClassLoader.getSystemResource("HSQLDB").getPath()+"/DB";
+			
+			Map<String, String> configurationOverrides = new HashMap<>();
+			configurationOverrides.put("hibernate.connection.url", database);
+			EntityManagerFactory lEmf = Persistence.createEntityManagerFactory("DSNstructures-PU", configurationOverrides);
+			GrammarFactory lGrammarFactory = new GrammarFactory(lEmf);
+			lParserFactory = new DSNParserFactory(lGrammarFactory.getGrammar(lDsnVersion));
+			lEmf.close();
 			lParser = lParserFactory.newDSNParser();
 		} catch (NoGrammarFoundException e) {
 			e.printStackTrace();
 		}
 
 		try (InputStream lIs = MyTest.class.getClassLoader().getResourceAsStream(lFileName)) {
-			lParser.parse(lIs, "UTF-8", xmlWriter);
+			lParser.parse(lIs, "UTF-8", noOpHandler);
 		} catch (GrammarViolationException | ParseException | IOException e) {
 			e.printStackTrace();
 		}

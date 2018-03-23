@@ -91,7 +91,7 @@ public class Bloc extends Component {
 				if (this.isLoopable()) {
 					// do not increment lComponentIndex since we want to loop again on this bloc
 				} else {
-					String error = ErrorsManager.getInstance().getMessageErreur(ErrorCode.CODE_ERREUR_0008, pTargetComponent.parent.getName());
+					String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0008, pTargetComponent.parent.getName());
 					throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0008.toString(), error);
 				}
 			}
@@ -138,7 +138,7 @@ public class Bloc extends Component {
 
 	@Override
 	protected void throwError(Component pTargetComponent) throws GrammarViolationException {
-		String error = ErrorsManager.getInstance().getMessageErreur(ErrorCode.CODE_ERREUR_0005, this.getName(), pTargetComponent.getName());
+		String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0005, this.getName(), pTargetComponent.getName());
 		throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0005.toString(), error);
 	}
 }
