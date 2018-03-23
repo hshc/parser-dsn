@@ -1,0 +1,135 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>fr.hsh.dsn</groupId>
+	<artifactId>parser-dsn</artifactId>
+	<packaging>pom</packaging>
+	<name>parser-dsn</name>
+	<version>0.0.1-SNAPSHOT</version>
+	<modules>
+		<module>parser-dsn-core</module>
+	</modules>
+	
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<url>http://nexus:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://nexus:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<source.code.level>1.8</source.code.level>
+		
+		<org.slf4j.slf4j-api.version>1.6.1</org.slf4j.slf4j-api.version>
+		<ch.qos.logback.logback-classic.version>1.0.13</ch.qos.logback.logback-classic.version>
+		<org.slf4j.jcl-over-slf4j.version>1.6.1</org.slf4j.jcl-over-slf4j.version>
+		<org.slf4j.log4j-over-slf4j.version>1.6.1</org.slf4j.log4j-over-slf4j.version>
+		<org.slf4j.jul-to-slf4j.version>1.6.1</org.slf4j.jul-to-slf4j.version>
+		<org.hibernate.hibernate-envers.version>4.1.0.Final</org.hibernate.hibernate-envers.version>
+		<mysql.mysql-connector-java.version>5.1.25</mysql.mysql-connector-java.version>
+		<fr.hsh.socle.exception.socle-exception.version>1.0.0</fr.hsh.socle.exception.socle-exception.version>
+		<commons-configuration.commons-configuration.version>1.9</commons-configuration.commons-configuration.version>
+		<org.hsqldb.hsqldb.version>2.4.0</org.hsqldb.hsqldb.version>
+		<org.hsqldb.sqltool.version>2.3.3</org.hsqldb.sqltool.version>
+		<junit.junit.version>4.11</junit.junit.version>
+		
+		<checkstyle.plugin.version>2.9.1</checkstyle.plugin.version>
+		<pmd.plugin.version>2.7.1</pmd.plugin.version>
+		<javadoc.plugin.version>2.8.1</javadoc.plugin.version>
+		<findbugs.plugin.version>2.5.1</findbugs.plugin.version>
+		<surefire.report.plugin.version>2.12</surefire.report.plugin.version>
+		<surefire.plugin.version>2.12</surefire.plugin.version>
+		<taglist.plugin.version>2.4</taglist.plugin.version>
+		<cobertura.plugin.version>2.4</cobertura.plugin.version>
+		<javancss.plugin.version>2.0</javancss.plugin.version>
+		<jdepend.plugin.version>2.0-beta-2</jdepend.plugin.version>
+		<jxr.plugin.version>2.3</jxr.plugin.version>
+		<changes.plugin.version>2.6</changes.plugin.version>
+		<changelog.plugin.version>2.2</changelog.plugin.version>
+		<maven-site-plugin.version>3.0</maven-site-plugin.version>
+		<dependency.plugin.version>2.4</dependency.plugin.version>
+		
+		<jar.plugin.version>2.6</jar.plugin.version>
+		<assembly.plugin.version>2.4</assembly.plugin.version>
+		<compiler.plugin.version>2.3.2</compiler.plugin.version>
+		<resources.plugin.version>2.6</resources.plugin.version>
+	</properties>
+	<prerequisites>
+		<maven>3.0.0</maven>
+	</prerequisites>
+	<scm>
+	
+	</scm>
+	<developers>
+		<developer>
+			<id>nta</id>
+			<name>Nicolas Tardy</name>
+			<email>nico.taroy@gmail.com</email>
+			<organization>HSHC</organization>
+			<roles>
+				<role>dev</role>
+			</roles>
+		</developer>
+	</developers>
+	<dependencyManagement>
+    		<dependencies>
+			<dependency><groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>${org.slf4j.slf4j-api.version}</version></dependency>
+			<dependency><groupId>ch.qos.logback</groupId><artifactId>logback-classic</artifactId><version>${ch.qos.logback.logback-classic.version}</version></dependency>
+			<dependency><groupId>org.slf4j</groupId><artifactId>jcl-over-slf4j</artifactId><version>${org.slf4j.jcl-over-slf4j.version}</version></dependency>
+			<dependency><groupId>org.slf4j</groupId><artifactId>log4j-over-slf4j</artifactId><version>${org.slf4j.log4j-over-slf4j.version}</version></dependency>
+			<dependency><groupId>org.slf4j</groupId><artifactId>jul-to-slf4j</artifactId><version>${org.slf4j.jul-to-slf4j.version}</version></dependency>
+			<dependency><groupId>org.hibernate</groupId><artifactId>hibernate-envers</artifactId><version>${org.hibernate.hibernate-envers.version}</version></dependency>
+			<dependency><groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>${mysql.mysql-connector-java.version}</version></dependency>
+			<dependency><groupId>fr.hsh.socle.exception</groupId><artifactId>socle-exception</artifactId><version>${fr.hsh.socle.exception.socle-exception.version}</version></dependency>
+			<dependency>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>${commons-configuration.commons-configuration.version}</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.hsqldb/hsqldb -->
+			<dependency><groupId>org.hsqldb</groupId><artifactId>hsqldb</artifactId><version>${org.hsqldb.hsqldb.version}</version></dependency>
+			<dependency><groupId>org.hsqldb</groupId><artifactId>sqltool</artifactId><version>${org.hsqldb.sqltool.version}</version></dependency>
+			<!-- https://mvnrepository.com/artifact/junit/junit -->
+			<dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>${junit.junit.version}</version></dependency>
+    		</dependencies>
+	</dependencyManagement>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>${resources.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${compiler.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${jar.plugin.version}</version>
+				</plugin>
+				<plugin>
+		  			<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${assembly.plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${source.code.level}</source>
+					<target>${source.code.level}</target>
+					<optimize>true</optimize>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

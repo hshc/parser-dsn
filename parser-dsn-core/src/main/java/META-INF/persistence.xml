@@ -4,27 +4,4 @@
 		<class>fr.hsh.dsn.orm.entities.DSNStructureByVersion</class>
 		<class>fr.hsh.dsn.orm.entities.DSNStructureByVersionPK</class>
 	</persistence-unit>
-	<persistence-unit name="DSNversion-PU">
-		<class>fr.hsh.dsn.orm.entities.DSNStructureByVersion</class>
-		<class>fr.hsh.dsn.orm.entities.DSNStructureByVersionPK</class>
-	</persistence-unit>
-	<persistence-unit name="DSNstock-PU">
-		<class>fr.hsh.dsn.orm.entities.p02v02.T00</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T01</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T02</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T03</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T05</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T06</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T11</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T15</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T30</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T31</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T40</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T41</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T62</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T70</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T72</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T85</class>
-		<class>fr.hsh.dsn.orm.entities.p02v02.T90</class>
-	</persistence-unit>
 </persistence>

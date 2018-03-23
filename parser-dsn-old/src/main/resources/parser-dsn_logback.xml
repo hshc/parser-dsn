@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="3600 seconds">
+	<contextName>ParserDSN</contextName>
+	<jmxConfigurator />
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+	 <!-- sends logs to logback-beagle -->
+	<!-- <consolePlugin /> -->
+
+	<appender name="AllLogsFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${output.filePaths.logFileName}</file>
+		<append>true</append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${output.filePaths.logFileName}.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%date[%thread][%level][%logger][%file][%class] {%method} - %message%n</pattern>
+		</encoder>
+	</appender> 
+	<appender name="ReportingFile" class="ch.qos.logback.core.FileAppender">
+		<file>${output.filePaths.reporting}</file>
+		<append>true</append>
+		<encoder>
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="AnnosFonctFile" class="ch.qos.logback.core.FileAppender">
+		<file>${output.filePaths.anosFonct}</file>
+		<append>true</append>
+		<encoder>
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="AnnosTechFile" class="ch.qos.logback.core.FileAppender">
+		<file>${output.filePaths.anosTech}</file>
+		<append>true</append>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n%rEx</pattern>
+		</encoder>
+	</appender>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<!-- 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"> -->
+<!-- 		</encoder> -->
+		<layout class="ch.qos.logback.classic.PatternLayout">
+		<!-- 
+			<Pattern>%d{HH:mm:ss.SSS} %-5level %logger{100} - %msg%n%rEx</Pattern>
+		 -->
+			<Pattern>%msg%n</Pattern>
+		</layout>
+	</appender>
+	
+	<logger name="org.hibernate" level="ERROR" additivity="false">
+		<appender-ref ref="AllLogsFile" />
+	</logger>
+	<logger name="org.hibernate.SQL" level="ERROR" >
+		<appender-ref ref="AllLogsFile" />
+	</logger>
+	<logger name="org.hibernate.jdbc" level="ERROR" >
+		<appender-ref ref="AllLogsFile" />
+	</logger>
+	<logger name="org.hibernate.type" level="ERROR" >
+		<appender-ref ref="AllLogsFile" />
+	</logger>
+	
+
+<!-- 	<logger name="org.hibernate" level="INFO" additivity="false"> -->
+<!-- 		<appender-ref ref="AllLogsFile" /> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="org.hibernate.SQL" level="DEBUG" > -->
+<!-- 		<appender-ref ref="AllLogsFile" /> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="org.hibernate.jdbc" level="DEBUG" > -->
+<!-- 		<appender-ref ref="AllLogsFile" /> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="org.hibernate.type" level="TRACE" > -->
+<!-- 		<appender-ref ref="AllLogsFile" /> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="reporting" level="INFO" additivity="false"> -->
+<!-- 		<appender-ref ref="ReportingFile" /> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="fonctionnel" level="INFO" additivity="false"> -->
+<!-- 		<appender-ref ref="ReportingFile" /> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="fr.hsh" level="ALL" additivity="false"> -->
+<!-- 		<appender-ref ref="AllLogsFile" /> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="fr.hsh" level="ALL" additivity="false"> -->
+<!-- 		<appender-ref ref="STDOUT" /> -->
+<!-- 		<appender-ref ref="AnnosTechFile" /> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="fr.hsh.dsn.parser.DSNParser" level="ERROR" additivity="false"> -->
+<!-- 		<appender-ref ref="STDOUT" /> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="fr.hsh.dsn.parser.grammar" level="ERROR" additivity="false"> -->
+<!-- 		<appender-ref ref="STDOUT" /> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="fr.hsh.dsn.parser.handler.writer.DatabaseWriter" level="INFO" additivity="false"> -->
+<!-- 		<appender-ref ref="AllLogsFile" /> -->
+<!-- 	</logger> -->
+	
+	
+	<root level="ERROR">
+		<appender-ref ref="AllLogsFile" />
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

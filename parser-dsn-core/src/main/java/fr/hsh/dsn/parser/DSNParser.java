@@ -13,33 +13,23 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.hsh.dsn.errors.ErreurCode;
-import fr.hsh.dsn.errors.GestionErreurs;
+import fr.hsh.dsn.errors.ErrorCode;
+import fr.hsh.dsn.errors.ErrorsManager;
 import fr.hsh.dsn.exception.GrammarViolationException;
 import fr.hsh.dsn.exception.NoGrammarFoundException;
 import fr.hsh.dsn.exception.ParseException;
-import fr.hsh.dsn.orm.persistence.MultiPersistenceUnitManager.NatureDeclaration;
 import fr.hsh.dsn.parser.grammar.ComputedGrammar;
 import fr.hsh.dsn.parser.grammar.metamodel.Bloc;
 import fr.hsh.dsn.parser.grammar.metamodel.GrammarFactory;
 import fr.hsh.dsn.parser.grammar.metamodel.Section;
 import fr.hsh.dsn.parser.handler.IContentHandler;
-import fr.hsh.dsn.parser.handler.writer.ContentHandlerFactory;
+import fr.hsh.dsn.parser.handler.NoOpContentHandler;
 import fr.hsh.socle.exception.core.SocleException;
-import fr.hsh.utils.ApplicativeProperties;
-import fr.hsh.utils.DateUtils;
-import fr.hsh.utils.PropertiesLoader;
 
 /**
  *  Description: Sax like parser for DSN files<br>
@@ -234,8 +224,8 @@ public class DSNParser {
 
 		int lStartPayloadIndex = pCurrentLine.indexOf(separator);
 		if (lStartPayloadIndex == -1) {
-			String error = GestionErreurs.getInstance().getMessageErreur(ErreurCode.CODE_ERREUR_0009, separator);
-			throw new GrammarViolationException(ErreurCode.CODE_ERREUR_0009.toString(), error);
+			String error = ErrorsManager.getInstance().getMessageErreur(ErrorCode.CODE_ERREUR_0009, separator);
+			throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0009.toString(), error);
 		} 
 
 		lCurrentSection = pCurrentLine.substring(0, lStartPayloadIndex);
@@ -271,20 +261,7 @@ public class DSNParser {
 	}
 
 	public static void main(String[] args) throws GrammarViolationException, NoGrammarFoundException {
-
-		PropertiesLoader.initialize("parser-dsn.properties");
-		if (PropertiesLoader.isInitialized()) {
-			PropertiesLoader pl = PropertiesLoader.getInstance();
-			String msgErreursPath = pl.getString(ApplicativeProperties.MSG_ERREURS_PATH.toString());
-			String logConfPath = pl.getString(ApplicativeProperties.LOG_CONF_PATH.toString());
-			String formatDate = pl.getString(ApplicativeProperties.DATE_FORMAT.toString());
-
-			GestionErreurs.initialize(msgErreursPath);
-			if (GestionErreurs.isInitialized()) {
-				DateUtils.initialize(formatDate);
-			}
-		}
-
+		
 		String arguments[] = args;
 		FileInputStream fstream = null;
 		try {
@@ -292,64 +269,17 @@ public class DSNParser {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-
-		ExecutorService executorService = Executors.newCachedThreadPool();
-		Set<Callable<String>> callables = new HashSet<Callable<String>>();
-
-		callables.add(new Callable<String>() {
-			public String call() throws Exception {
-				ComputedGrammar grammar = GrammarFactory.getGrammar("V01");
-				return "Task 1";
-			}
-		});
-		callables.add(new Callable<String>() {
-			public String call() throws Exception {
-				ComputedGrammar grammar = GrammarFactory.getGrammar("P02V02");
-				return "Task 2";
-			}
-		});
-
-		List<Future<String>> futures = null;
-		try {
-			//			futures = executorService.invokeAll(callables, 50000, TimeUnit.MILLISECONDS);
-			futures = executorService.invokeAll(callables);
-			for (Future<String> future : futures) {
-				boolean isThreadCancelled = false;
-				if (isThreadCancelled = future.isCancelled()) {
-					System.out.println("un future "+future.toString()+" a été cancellé");
-				} else {
-					System.out.println("un future arrive à terme");
-				}
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			if (null != futures) {
-				for (final Future<String> future : futures) {
-					if (!future.isCancelled()) {
-						future.cancel(Boolean.TRUE);
-						System.out.println("T1");
-					}
-				}
-			}
-			executorService.shutdown();
-			executorService.shutdownNow();
-		}
-
 		String lDsnVersion = "V01";
 		ComputedGrammar grammar = GrammarFactory.getGrammar(lDsnVersion);
 		DSNParser parser = new DSNParser(grammar);
 		try {
 
 			// Create the content handler
-			IContentHandler xmlWriter = ContentHandlerFactory.getXmlWriter();
-			IContentHandler dbWriter = ContentHandlerFactory.getDatabaseWriter(lDsnVersion);
-			IContentHandler chainWriter = ContentHandlerFactory.getChainWriterWrapper(xmlWriter, dbWriter);
-			//			IContentHandler chainWriter = ContentHandlerFactory.getChainWriterWrapper(xmlWriter/*, dbWriter*/);
+			IContentHandler noOpHandler = new NoOpContentHandler();
 
 			// Parse the file with the specify content handler
 			long t = System.currentTimeMillis();
-			parser.parse(fstream, "UTF-8", chainWriter);
+			parser.parse(fstream, "UTF-8", noOpHandler);
 		} catch (SocleException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

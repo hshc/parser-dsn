@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.util.StatusPrinter;
-import fr.hsh.dsn.errors.GestionErreurs;
+import fr.hsh.dsn.errors.ErrorsManager;
 import fr.hsh.dsn.exception.GrammarViolationException;
 import fr.hsh.dsn.exception.NoGrammarFoundException;
 import fr.hsh.dsn.exception.ParseException;
@@ -98,8 +98,8 @@ public class MyTest {
 		// print logback's internal status
 		StatusPrinter.print(lc);
 		
-		GestionErreurs.initialize("error_messages.properties");
-		if (GestionErreurs.isInitialized()) {
+		ErrorsManager.initialize("error_messages.properties");
+		if (ErrorsManager.isInitialized()) {
 			DateUtils.initialize("yyyyMMdd");
 		}
 		

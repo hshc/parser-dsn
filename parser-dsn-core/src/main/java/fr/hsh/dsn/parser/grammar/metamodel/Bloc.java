@@ -7,8 +7,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.hsh.dsn.errors.ErreurCode;
-import fr.hsh.dsn.errors.GestionErreurs;
+import fr.hsh.dsn.errors.ErrorCode;
+import fr.hsh.dsn.errors.ErrorsManager;
 import fr.hsh.dsn.exception.GrammarViolationException;
 import fr.hsh.dsn.parser.ParsingEvent;
 import fr.hsh.dsn.parser.ParsingEventType;
@@ -91,8 +91,8 @@ public class Bloc extends Component {
 				if (this.isLoopable()) {
 					// do not increment lComponentIndex since we want to loop again on this bloc
 				} else {
-					String error = GestionErreurs.getInstance().getMessageErreur(ErreurCode.CODE_ERREUR_0008, pTargetComponent.parent.getName());
-					throw new GrammarViolationException(ErreurCode.CODE_ERREUR_0008.toString(), error);
+					String error = ErrorsManager.getInstance().getMessageErreur(ErrorCode.CODE_ERREUR_0008, pTargetComponent.parent.getName());
+					throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0008.toString(), error);
 				}
 			}
 			Deque<ParsingEvent> lEventDeque = this.getParent().findComponent(lThisIndexInParent, pTargetComponent);
@@ -138,7 +138,7 @@ public class Bloc extends Component {
 
 	@Override
 	protected void throwError(Component pTargetComponent) throws GrammarViolationException {
-		String error = GestionErreurs.getInstance().getMessageErreur(ErreurCode.CODE_ERREUR_0005, this.getName(), pTargetComponent.getName());
-		throw new GrammarViolationException(ErreurCode.CODE_ERREUR_0005.toString(), error);
+		String error = ErrorsManager.getInstance().getMessageErreur(ErrorCode.CODE_ERREUR_0005, this.getName(), pTargetComponent.getName());
+		throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0005.toString(), error);
 	}
 }

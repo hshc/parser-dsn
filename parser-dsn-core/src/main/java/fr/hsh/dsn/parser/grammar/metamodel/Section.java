@@ -6,8 +6,8 @@ import java.util.Deque;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.hsh.dsn.errors.ErreurCode;
-import fr.hsh.dsn.errors.GestionErreurs;
+import fr.hsh.dsn.errors.ErrorCode;
+import fr.hsh.dsn.errors.ErrorsManager;
 import fr.hsh.dsn.exception.GrammarViolationException;
 import fr.hsh.dsn.parser.ParsingEvent;
 import fr.hsh.dsn.parser.ParsingEventType;
@@ -68,7 +68,7 @@ public class Section extends Component {
 
 	@Override
 	protected void throwError(Component pTargetComponent) throws GrammarViolationException {
-		String error = GestionErreurs.getInstance().getMessageErreur(ErreurCode.CODE_ERREUR_0003, this.getName(), pTargetComponent.getName());
-		throw new GrammarViolationException(ErreurCode.CODE_ERREUR_0003.toString(), error);
+		String error = ErrorsManager.getInstance().getMessageErreur(ErrorCode.CODE_ERREUR_0003, this.getName(), pTargetComponent.getName());
+		throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0003.toString(), error);
 	}
 }
