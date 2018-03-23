@@ -213,7 +213,7 @@ public class DSNParser {
 			logger.error("Error when reading BufferedReader new line - ", e);
 		} catch (GrammarViolationException e) {
 			logger.error("{} - Erreur ligne {}: {}", new Object[] {e.getLogId().toString(), nbLine, e.getMessage()});
-			throw new GrammarViolationException(e.getCode(), "Erreure Ligne - "+nbLine+" - "+e.getShortLabel(), e);
+			throw (GrammarViolationException) e.prefixMessage("Erreur ligne - '" + nbLine + "'");
 		} finally {
 			try {
 				br.close();
