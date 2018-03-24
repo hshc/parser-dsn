@@ -39,7 +39,6 @@ import fr.hsh.dsn.parser.DSNParserFactory;
 import fr.hsh.dsn.parser.grammar.metamodel.GrammarFactory;
 import fr.hsh.dsn.parser.handler.IContentHandler;
 import fr.hsh.dsn.parser.handler.NoOpContentHandler;
-import fr.hsh.dsn.parser.handler.XmlWriter;
 import fr.hsh.utils.DateUtils;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
