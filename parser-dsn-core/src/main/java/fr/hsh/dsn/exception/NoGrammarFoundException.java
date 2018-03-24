@@ -6,6 +6,6 @@ import fr.hsh.socle.exception.core.SocleFonctionnalException;
 
 public class NoGrammarFoundException extends SocleFonctionnalException {
 	public NoGrammarFoundException(final String pGrammarVersion) {
-		super(ErrorCode.CODE_ERREUR_0007.toString(), ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0007, pGrammarVersion));
+		super(ErrorCode.CODE_ERROR_0007.toString(), ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERROR_0007, pGrammarVersion));
 	}
 }

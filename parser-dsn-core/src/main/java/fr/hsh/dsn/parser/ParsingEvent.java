@@ -4,16 +4,26 @@ import fr.hsh.dsn.parser.grammar.metamodel.Component;
 
 
 public class ParsingEvent {
-	private final Component relatedComponent;
-	private final ParsingEventType parsingEventType;
-	private String payload;
+	private final Component			relatedComponent;
+	private final ParsingEventType	parsingEventType;
+	private final String			sectionName;
+	private String					payload;
 
 	public ParsingEvent(final Component pRelatedComponent, final ParsingEventType pParsingEventType) {
 		super();
 		this.relatedComponent = pRelatedComponent;
 		this.parsingEventType = pParsingEventType;
+		this.sectionName = pRelatedComponent.getName();
 	}
 
+	public ParsingEvent(final String pUnreferencedSection, final String pPayload) {
+		super();
+		this.relatedComponent = null;
+		this.parsingEventType = ParsingEventType.UNREFERENCED_SECTION;
+		this.sectionName = pUnreferencedSection;
+		this.payload = pPayload;
+	}
+	
 	/**
 	 * @return Renvoie payload.
 	 */
@@ -40,6 +50,10 @@ public class ParsingEvent {
 	 */
 	public ParsingEventType getEventType() {
 		return this.parsingEventType;
+	}
+	
+	public String getSectionName() {
+		return this.sectionName;
 	}
 
 	@Override

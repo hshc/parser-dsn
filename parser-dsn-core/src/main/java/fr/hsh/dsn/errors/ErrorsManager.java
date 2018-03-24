@@ -28,9 +28,9 @@ public class ErrorsManager {
 
 		if (sSingleton == null) {
 			if (pLocale == null) {
-				sSingleton = new ErrorsManager(ResourceBundle.getBundle("errors.messages", pLocale));
+				sSingleton = new ErrorsManager(ResourceBundle.getBundle("errors.messages-dsn-core", pLocale));
 			} else {
-				sSingleton = new ErrorsManager(ResourceBundle.getBundle("errors.messages", Locale.getDefault()));
+				sSingleton = new ErrorsManager(ResourceBundle.getBundle("errors.messages-dsn-core", Locale.getDefault()));
 			}
 			sInit = true;
 		}
@@ -41,7 +41,7 @@ public class ErrorsManager {
 		logger.trace(" > initialize()");
 
 		if (sSingleton == null) {
-			sSingleton = new ErrorsManager(ResourceBundle.getBundle("errors.messages", Locale.getDefault()));
+			sSingleton = new ErrorsManager(ResourceBundle.getBundle("errors.messages-dsn-core", Locale.getDefault()));
 			sInit = true;
 		}
 		
@@ -105,12 +105,12 @@ public class ErrorsManager {
 	}
 
 	public static void main(String[] args) {
-		ErrorsManager.initialize("errors/messages.properties");
-		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0001, "SG01.001.001", "V1"));
-		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_RETOUR_OK));
+		ErrorsManager.initialize("errors/messages-dsn-core.properties");
+		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERROR_0001, "SG01.001.001", "V1"));
+		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_RETURN_OK));
 		
 		ErrorsManager.initialize();
-		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0001, "SG01.001.001", "V1"));
-		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_RETOUR_OK));
+		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERROR_0001, "SG01.001.001", "V1"));
+		System.out.println(ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_RETURN_OK));
 	}
 }

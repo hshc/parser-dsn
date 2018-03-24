@@ -33,6 +33,9 @@ final class  EventHandler {
 		case END_ELEMENT:
 			this.iContentHandler.endElement((Bloc)pParseEvent.getRelatedComponent());
 			break;
+		case UNREFERENCED_SECTION:
+			this.iContentHandler.handleUnreferencedSection(pParseEvent.getSectionName(), pParseEvent.getPayload());
+			break;
 		default:
 			break;
 		}

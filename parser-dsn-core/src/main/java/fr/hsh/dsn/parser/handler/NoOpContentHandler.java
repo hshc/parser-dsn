@@ -26,4 +26,12 @@ public class NoOpContentHandler implements IContentHandler {
 	public void endDocument() throws ParseException {
 	}
 
+	@Override
+	public void handleError(Throwable pException) {
+	}
+
+	@Override
+	public void handleUnreferencedSection(String pSectionName, String pPayload) {
+	}
+
 }

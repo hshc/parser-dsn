@@ -91,8 +91,8 @@ public class Bloc extends Component {
 				if (this.isLoopable()) {
 					// do not increment lComponentIndex since we want to loop again on this bloc
 				} else {
-					String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0008, pTargetComponent.parent.getName());
-					throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0008.toString(), error);
+					String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERROR_0008, pTargetComponent.parent.getName());
+					throw new GrammarViolationException(ErrorCode.CODE_ERROR_0008.toString(), error);
 				}
 			}
 			Deque<ParsingEvent> lEventDeque = this.getParent().findComponent(lThisIndexInParent, pTargetComponent);
@@ -138,7 +138,7 @@ public class Bloc extends Component {
 
 	@Override
 	protected void throwError(Component pTargetComponent) throws GrammarViolationException {
-		String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0005, this.getName(), pTargetComponent.getName());
-		throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0005.toString(), error);
+		String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERROR_0005, this.getName(), pTargetComponent.getName());
+		throw new GrammarViolationException(ErrorCode.CODE_ERROR_0005.toString(), error);
 	}
 }

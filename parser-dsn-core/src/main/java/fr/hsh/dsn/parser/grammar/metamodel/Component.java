@@ -1,6 +1,5 @@
 package fr.hsh.dsn.parser.grammar.metamodel;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
@@ -105,9 +104,7 @@ public abstract class Component {
 	 * @throws GrammarViolationException
 	 */
 	public Deque<ParsingEvent> findComponent(final int pStepCompareComponentStartIndex, final Component pTargetComponent) throws GrammarViolationException {
-		Deque<ParsingEvent> lEventDeque = new ArrayDeque<ParsingEvent>();
-		List<Component> lComponentList = this.orderedNestedComponentList;
-
+		
 		String tab = "";
 		if (logger.isTraceEnabled()) {
 			for (int i = this.level(); i > 0; i--) {

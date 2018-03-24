@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -37,6 +39,7 @@ import fr.hsh.dsn.parser.DSNParserFactory;
 import fr.hsh.dsn.parser.grammar.metamodel.GrammarFactory;
 import fr.hsh.dsn.parser.handler.IContentHandler;
 import fr.hsh.dsn.parser.handler.NoOpContentHandler;
+import fr.hsh.dsn.parser.handler.XmlWriter;
 import fr.hsh.utils.DateUtils;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -100,7 +103,7 @@ public class MyTest {
 	}
 	
 	@Test
-	public void testParseDSN() {
+	public void testParseDSN() throws URISyntaxException {
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		// print logback's internal status
 		StatusPrinter.print(lc);
@@ -115,7 +118,7 @@ public class MyTest {
 		
 		DSNParserFactory lParserFactory = null;
 		DSNParser lParser = null;
-		IContentHandler noOpHandler = new NoOpContentHandler();
+		IContentHandler lHandler = new NoOpContentHandler();
 		
 		try {
 			String database = "jdbc:hsqldb:file:"+ClassLoader.getSystemResource("HSQLDB").getPath()+"/DB";
@@ -130,10 +133,10 @@ public class MyTest {
 		} catch (NoGrammarFoundException e) {
 			e.printStackTrace();
 		}
-
-		try (InputStream lIs = MyTest.class.getClassLoader().getResourceAsStream(lFileName)) {
-			lParser.parse(lIs, "UTF-8", noOpHandler);
-		} catch (GrammarViolationException | ParseException | IOException e) {
+		
+		try {
+			lParser.parse(Paths.get(ClassLoader.getSystemResource(lFileName).toURI()), "UTF-8", lHandler);
+		} catch (GrammarViolationException | ParseException e) {
 			e.printStackTrace();
 		}
 		

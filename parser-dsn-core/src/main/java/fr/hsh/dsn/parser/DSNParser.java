@@ -10,12 +10,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -44,34 +48,34 @@ import fr.hsh.socle.exception.core.SocleException;
  *  @author
  */
 public class DSNParser {
-	private static final Logger	logger			= LoggerFactory.getLogger(DSNParser.class);
-	private static final String	DEFAULT_CHARSET	= "ISO-8859-1";
-	
-	private final String	separator;
-	private ComputedGrammar	grammar			= null;
-	private String			previousLine	= null;
+	private static final Logger	logger					= LoggerFactory.getLogger(DSNParser.class);
+	private static final String	DEFAULT_CHARSET			= "ISO-8859-1";
+
+	private final String		separator;
+	private ComputedGrammar		grammar					= null;
+	private LineWrapper			previousLine			= null;
 	
 	//	private final EventHandler		eventHandler;
 
-	private static List<String> ignoreList = new ArrayList<>();
+	private static List<String> unreferencedSectionList = new ArrayList<>();
 	static {
-		ignoreList.add("S10.G00.95.001");
-		ignoreList.add("S10.G00.95.002");
-		ignoreList.add("S10.G00.95.003");
-		ignoreList.add("S10.G00.95.006");
-		ignoreList.add("S10.G00.95.007");
-		ignoreList.add("S10.G00.95.008");
-		ignoreList.add("S10.G00.95.900");
-		ignoreList.add("S10.G00.95.901");
-		ignoreList.add("S20.G00.96.902");
-		ignoreList.add("S21.G00.06.903");
-		ignoreList.add("S21.G00.11.904");
-		ignoreList.add("S21.G00.80.003");
-		ignoreList.add("S21.G00.85.850");
-		ignoreList.add("S10.G00.95.009");
-		ignoreList.add("S21.G00.11.110");
-		ignoreList.add("S21.G00.11.111");
-		ignoreList.add("S21.G00.11.112");
+		unreferencedSectionList.add("S10.G00.95.001");
+		unreferencedSectionList.add("S10.G00.95.002");
+		unreferencedSectionList.add("S10.G00.95.003");
+		unreferencedSectionList.add("S10.G00.95.006");
+		unreferencedSectionList.add("S10.G00.95.007");
+		unreferencedSectionList.add("S10.G00.95.008");
+		unreferencedSectionList.add("S10.G00.95.900");
+		unreferencedSectionList.add("S10.G00.95.901");
+		unreferencedSectionList.add("S20.G00.96.902");
+		unreferencedSectionList.add("S21.G00.06.903");
+		unreferencedSectionList.add("S21.G00.11.904");
+		unreferencedSectionList.add("S21.G00.80.003");
+		unreferencedSectionList.add("S21.G00.85.850");
+		unreferencedSectionList.add("S10.G00.95.009");
+		unreferencedSectionList.add("S21.G00.11.110");
+		unreferencedSectionList.add("S21.G00.11.111");
+		unreferencedSectionList.add("S21.G00.11.112");
 	};
 
 
@@ -164,107 +168,126 @@ public class DSNParser {
 	 * @throws ParseException 
 	 */
 	public void parse(final InputStream pIs, final String pCharset, final IContentHandler pIContentHandler) throws GrammarViolationException, ParseException {
-		BufferedReader br = null;
+		BufferedReader lBuffReader = null;
 		Deque<ParsingEvent> lEventDeque = new ArrayDeque<>();
-		EventHandler eventHandler = new EventHandler(pIContentHandler);
-
+		EventHandler lEventHandler = new EventHandler(pIContentHandler);
+		
 		try {
-			this.previousLine = this.grammar.getSection(BOF).getName()+",''";
+			this.previousLine = new LineWrapper(this.grammar.getSection(BOF).getName()+",''");
 		} catch (GrammarViolationException e) {
 			// can never append
 			logger.error(e.getMessage());
 		}
-
+		
 		try {
-			br = new BufferedReader(new InputStreamReader(pIs, pCharset != null?pCharset:DEFAULT_CHARSET));
+			lBuffReader = new BufferedReader(new InputStreamReader(pIs, pCharset != null?pCharset:DEFAULT_CHARSET));
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			return;
 		}
-
-		String currentLine = null;
-		int nbLine = 0;
+		
+		String lNewLine = null;
+		int numLine = 0;
 		pIContentHandler.startDocument();
 		try {
-			while ((currentLine = br.readLine()) != null) {
+			while ((lNewLine = lBuffReader.readLine()) != null) {
 				// checkIgnoreList
 				// checkBlackList
-
-				if (ignoreList.contains(currentLine.substring(0,currentLine.lastIndexOf(separator)))) {
-					logger.info("Ignore {}", currentLine);
+				LineWrapper lCurrentLine = new LineWrapper(lNewLine);
+				if (unreferencedSectionList.contains(lCurrentLine.sectionName)) {
+					logger.info("Unreferenced Section {}", lCurrentLine.sectionName);
+					lEventDeque.push(new ParsingEvent(lCurrentLine.sectionName, lCurrentLine.payload));
 				} else {
-					lEventDeque = this.computeLine(this.previousLine, currentLine);
-					eventHandler.handleEvents(lEventDeque);
-					this.previousLine = currentLine;
+					lEventDeque = this.computeLine(this.previousLine, lCurrentLine);
+					this.previousLine = lCurrentLine;
 				}
-				nbLine++;
+				lEventHandler.handleEvents(lEventDeque);
+				numLine++;
 			}
-			lEventDeque = this.computeLine(this.previousLine, EOF + ",''");
+			lEventDeque = this.computeLine(this.previousLine, new LineWrapper(EOF + ",''"));
 			lEventDeque.pollLast();
-			eventHandler.handleEvents(lEventDeque);
+			lEventHandler.handleEvents(lEventDeque);
 		} catch (IOException e) {
-			logger.error("Erreur ligne {}: {}", nbLine, e.getMessage());
-			logger.error("Error when reading BufferedReader new line - ", e);
+			String lError = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERROR_0010, numLine);
+			ParseException lParseException = new ParseException(ErrorCode.CODE_ERROR_0010.toString(), lError, e);
+			logger.error("{} - Erreur ligne {}: {}", new Object[] {lParseException.getLogId().toString(), numLine, e.getMessage()});
+			throw lParseException;
 		} catch (GrammarViolationException e) {
-			logger.error("{} - Erreur ligne {}: {}", new Object[] {e.getLogId().toString(), nbLine, e.getMessage()});
-			throw (GrammarViolationException) e.prefixMessage("Erreur ligne - '" + nbLine + "'");
+			logger.error("{} - Erreur ligne {}: {}", new Object[] {e.getLogId().toString(), numLine, e.getMessage()});
+			throw (GrammarViolationException) e.prefixMessage("Erreur ligne - '" + numLine + "': ");
 		} finally {
 			try {
-				br.close();
+				lBuffReader.close();
 			} catch (IOException e) {
-				logger.error("Error when closing BufferedReader - ", e);
+				logger.error("Error on closing BufferedReader - ", e);
 			}
 		}
 		pIContentHandler.endDocument();
 	}
-
-	private Deque<ParsingEvent> computeLine(final String pPreviousLine, final String pCurrentLine) throws GrammarViolationException {
-		String lPreviousSection = null;
-		String lCurrentSection = null;
-		Section lStartSection = null;
-		Section lTargetSection = null;
-		String lPayload = null;
-		int lStartSearchIndex = 0;
-
-		int lStartPayloadIndex = pCurrentLine.indexOf(separator);
-		if (lStartPayloadIndex == -1) {
-			String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0009, separator);
-			throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0009.toString(), error);
-		} 
-
-		lCurrentSection = pCurrentLine.substring(0, lStartPayloadIndex);
-		lPayload = pCurrentLine.substring(lStartPayloadIndex+2, pCurrentLine.length()-1);
-		lTargetSection = this.grammar.getSection(lCurrentSection);
-
-		lPreviousSection = pPreviousLine.substring(0, pPreviousLine.indexOf(separator));
-		lStartSection = this.grammar.getSection(lPreviousSection);
-		lStartSearchIndex = lStartSection.indexInParent()+1;
-
+	
+	public void parse(final Path pFilePath, final String pCharset, final IContentHandler pIContentHandler) throws GrammarViolationException, ParseException {
+		InputStream lInputStream = null;
+		try {
+			lInputStream = Files.newInputStream(pFilePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			this.parse(lInputStream, pCharset, pIContentHandler);
+		} catch (GrammarViolationException e) {
+			throw (GrammarViolationException) e.prefixMessage("Fichier - '" + pFilePath.toString() + "': ");
+		} catch (ParseException e) {
+			throw (ParseException) e.prefixMessage("Fichier - '" + pFilePath.toString() + "': ");
+		}
+	}
+	
+	private Deque<ParsingEvent> computeLine(final LineWrapper pPreviousLine, final LineWrapper pCurrentLine) throws GrammarViolationException {
+		String lPreviousSection = pPreviousLine.sectionName;
+		String lCurrentSection = pCurrentLine.sectionName;
+		Section lStartSection = this.grammar.getSection(lPreviousSection);
+		Section lTargetSection = this.grammar.getSection(lCurrentSection);
+		int lStartSearchIndex = lStartSection.indexInParent()+1;
+		
 		logger.trace("INPUT: [{}, {}]", lPreviousSection, lCurrentSection);
-
+		
 		Deque<ParsingEvent> lEventDeque = ((Bloc)lStartSection.getParent()).findComponent(lStartSearchIndex, lTargetSection);
-
+		
 		for (ParsingEvent lParsingEvent : lEventDeque) {
 			if (lParsingEvent.getEventType() == ParsingEventType.COMPUTE_SECTION) {
-				lParsingEvent.setPayload(lPayload);
+				lParsingEvent.setPayload(pCurrentLine.payload);
 			}
 		}
-
+		
 		if (logger.isTraceEnabled()) {
 			StringBuilder lOutputTrace = new StringBuilder();
 			lOutputTrace.append("OUTPUT: ");
 			for (ParsingEvent lParsingEvent : lEventDeque) {
 				lOutputTrace.append(lParsingEvent.toString()).append(", ");
 			}
-
+			
 			logger.trace(lOutputTrace.toString());
 			logger.trace("");
 		}
-
+		
 		return lEventDeque;
 	}
-
+	
+	
+	private class LineWrapper {
+		private final String sectionName;
+		private final String payload;
+		private LineWrapper(final String pLine) throws GrammarViolationException {
+			int lStartPayloadIndex = pLine.indexOf(separator);
+			if (lStartPayloadIndex == -1) {
+				String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERROR_0009, separator);
+				throw new GrammarViolationException(ErrorCode.CODE_ERROR_0009.toString(), error);
+			}
+			this.sectionName = pLine.substring(0, lStartPayloadIndex);
+			this.payload = pLine.substring(lStartPayloadIndex+separator.length()+1, pLine.length()-1);
+		}
+	}
+	
 	public static void main(String[] args) throws GrammarViolationException, NoGrammarFoundException {
 		
 		String lArguments[] = args;
@@ -289,7 +312,7 @@ public class DSNParser {
 		try {
 			// Create the content handler
 			IContentHandler lNoOpHandler = new NoOpContentHandler();
-
+			
 			// Parse the file with the specify content handler
 			long t = System.currentTimeMillis();
 			lParser.parse(lFstream, "UTF-8", lNoOpHandler);

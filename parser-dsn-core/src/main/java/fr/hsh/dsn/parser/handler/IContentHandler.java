@@ -10,4 +10,6 @@ public interface IContentHandler {
 	void compute(final Section pSection, final String pValue) throws ParseException;
 	void endElement(final Bloc pBloc) throws ParseException;
 	void endDocument() throws ParseException;
+	void handleUnreferencedSection(final String pSectionName, final String pPayload);
+	void handleError(final Throwable pException);
 }

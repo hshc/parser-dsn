@@ -68,7 +68,7 @@ public class Section extends Component {
 
 	@Override
 	protected void throwError(Component pTargetComponent) throws GrammarViolationException {
-		String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERREUR_0003, this.getName(), pTargetComponent.getName());
-		throw new GrammarViolationException(ErrorCode.CODE_ERREUR_0003.toString(), error);
+		String error = ErrorsManager.getInstance().getErrorMessage(ErrorCode.CODE_ERROR_0003, this.getName(), pTargetComponent.getName());
+		throw new GrammarViolationException(ErrorCode.CODE_ERROR_0003.toString(), error);
 	}
 }
