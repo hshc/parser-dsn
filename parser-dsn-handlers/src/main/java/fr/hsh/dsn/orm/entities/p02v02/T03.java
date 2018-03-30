@@ -22,7 +22,7 @@ public class T03 implements Serializable {
 	//	@GeneratedValue(generator="gen")
 	//	@GenericGenerator(name="gen", strategy="foreign",
 	//	parameters=@Parameter(name="property", value="t00"))
-	@Column(name="id_destinataireCRE")
+//	@Column(name="id_destinataireCRE")
 	private int idDestinataireCRE;
 
 	@Column(name="F001")

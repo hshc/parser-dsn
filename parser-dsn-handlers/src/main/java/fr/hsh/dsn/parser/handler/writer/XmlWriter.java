@@ -41,4 +41,16 @@ public class XmlWriter implements IContentHandler {
 		//		System.err.println(this.xml);
 	}
 
+	@Override
+	public void handleUnreferencedSection(String pSectionName, String pPayload) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleError(Throwable pException) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

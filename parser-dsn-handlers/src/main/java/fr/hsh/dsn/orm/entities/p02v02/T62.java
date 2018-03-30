@@ -19,7 +19,7 @@ public class T62 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="id_finContrat")
+//	@Column(name="id_finContrat")
 	private int idFinContrat;
 
 	@Column(name="F001")

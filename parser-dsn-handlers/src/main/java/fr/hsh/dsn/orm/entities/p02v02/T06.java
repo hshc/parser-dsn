@@ -19,7 +19,7 @@ public class T06 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="id_entreprise")
+//	@Column(name="id_entreprise")
 	private int idEntreprise;
 
 	@Column(name="F001")

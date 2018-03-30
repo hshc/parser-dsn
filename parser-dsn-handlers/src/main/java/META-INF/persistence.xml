@@ -18,5 +18,25 @@
 		<class>fr.hsh.dsn.orm.entities.p02v02.T72</class>
 		<class>fr.hsh.dsn.orm.entities.p02v02.T85</class>
 		<class>fr.hsh.dsn.orm.entities.p02v02.T90</class>
+		
+		<class>fr.hsh.dsn.orm.entities.p03v03.T07</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T16</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T20</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T50</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T51</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T52</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T53</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T54</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T55</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T60</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T65</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T66</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T71</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T73</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T78</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T79</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T81</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T82</class>
+		<class>fr.hsh.dsn.orm.entities.p03v03.T86</class>
 	</persistence-unit>
 </persistence>

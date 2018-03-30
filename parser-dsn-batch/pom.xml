@@ -8,9 +8,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>parser-dsn-handlers</artifactId>
+	<artifactId>parser-dsn-batch</artifactId>
 	<packaging>jar</packaging>
-	<name>parser-dsn-handlers</name>
+	<name>parser-dsn-batch</name>
 	
 	<dependencies>
 		<!-- <dependency> -->
@@ -21,7 +21,7 @@
 		
 		<dependency>
 			<groupId>fr.hsh.dsn</groupId>
-			<artifactId>parser-dsn-core</artifactId>
+			<artifactId>parser-dsn-handlers</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

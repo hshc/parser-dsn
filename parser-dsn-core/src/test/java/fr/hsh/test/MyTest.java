@@ -120,11 +120,11 @@ public class MyTest {
 		IContentHandler lHandler = new NoOpContentHandler();
 		
 		try {
-			String database = "jdbc:hsqldb:file:"+ClassLoader.getSystemResource("HSQLDB").getPath()+"/DB";
+			String lDatabase = "jdbc:hsqldb:file:"+ClassLoader.getSystemResource("HSQLDB").getPath()+"/DB";
 			
-			Map<String, String> configurationOverrides = new HashMap<>();
-			configurationOverrides.put("hibernate.connection.url", database);
-			EntityManagerFactory lEmf = Persistence.createEntityManagerFactory("DSNstructures-PU", configurationOverrides);
+			Map<String, String> lConfigurationOverrides = new HashMap<>();
+			lConfigurationOverrides.put("hibernate.connection.url", lDatabase);
+			EntityManagerFactory lEmf = Persistence.createEntityManagerFactory("DSNstructures-PU", lConfigurationOverrides);
 			GrammarFactory lGrammarFactory = new GrammarFactory(lEmf);
 			lParserFactory = new DSNParserFactory(lGrammarFactory.getGrammar(lDsnVersion));
 			lEmf.close();

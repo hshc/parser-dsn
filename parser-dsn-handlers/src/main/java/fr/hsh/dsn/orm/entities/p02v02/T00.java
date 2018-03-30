@@ -22,7 +22,6 @@ import javax.persistence.TableGenerator;
 
 import fr.hsh.dsn.orm.persistence.MultiPersistenceUnitManager;
 import fr.hsh.dsn.orm.persistence.MultiPersistenceUnitManager.PUcode;
-import fr.hsh.utils.ApplicativeProperties;
 
 /**
  * The persistent class for the T00 database table.
@@ -294,9 +293,6 @@ public class T00 implements Serializable {
 	}
 
 	public static void main(String[] args) throws InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException, MalformedObjectNameException {
-		System.setProperty(ApplicativeProperties.LOG_CONF_PATH.toString(), "/home/nta/workspaces/workspace_commun/parser-dsn/src/main/resources/parser-dsn_logback.xml");
-		System.setProperty(ApplicativeProperties.LOG_CONF_PATH.toString(), "parser-dsn_logback.xml");
-
 		EntityManagerFactory emf = MultiPersistenceUnitManager.getEntityManagerFactory(PUcode.DSN_STOCK);
 		EntityManager entityManager = emf.createEntityManager();
 

@@ -6,8 +6,8 @@ import org.hibernate.dialect.MySQL5InnoDBDialect;
 import org.hibernate.dialect.lock.LockingStrategy;
 import org.hibernate.persister.entity.Lockable;
 
-public class CsntMySQL5InnoDBDialect extends MySQL5InnoDBDialect {
-	public CsntMySQL5InnoDBDialect() {
+public class BitBooleanStorageMySQL5InnoDBDialect extends MySQL5InnoDBDialect {
+	public BitBooleanStorageMySQL5InnoDBDialect() {
 		super();
 		this.registerColumnType( java.sql.Types.BOOLEAN, "bit" );
 	}

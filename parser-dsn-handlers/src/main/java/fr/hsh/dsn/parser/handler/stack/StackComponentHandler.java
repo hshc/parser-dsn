@@ -60,7 +60,18 @@ public class StackComponentHandler implements IContentHandler {
 	@Override
 	public void endDocument() {
 		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public void handleUnreferencedSection(String pSectionName, String pPayload) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleError(Throwable pException) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public void push(final StackableComponentHandler pComponentHandler) {

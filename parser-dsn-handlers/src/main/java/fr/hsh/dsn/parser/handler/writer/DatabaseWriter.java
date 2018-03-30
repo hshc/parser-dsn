@@ -214,4 +214,14 @@ public class DatabaseWriter implements IContentHandler {
 			//			this.em.clear();
 		}
 	}
+
+	@Override
+	public void handleUnreferencedSection(String pSectionName, String pPayload) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void handleError(Throwable pException) {
+		// TODO Auto-generated method stub
+	}
 }

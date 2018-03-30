@@ -19,7 +19,7 @@ public class T11 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="id_etablissement")
+//	@Column(name="id_etablissement")
 	private int idEtablissement;
 
 	@Column(name="F001")

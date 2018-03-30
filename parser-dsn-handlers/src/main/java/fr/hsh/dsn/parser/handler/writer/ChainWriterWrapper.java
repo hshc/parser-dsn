@@ -58,4 +58,20 @@ public class ChainWriterWrapper implements IContentHandler {
 		}
 	}
 
+	@Override
+	public void handleUnreferencedSection(String pSectionName, String pPayload) {
+		this.writer.handleUnreferencedSection(pSectionName, pPayload);
+		if (this.next != null) {
+			this.next.handleUnreferencedSection(pSectionName, pPayload);
+		}
+	}
+
+	@Override
+	public void handleError(Throwable pException) {
+		this.writer.handleError(pException);
+		if (this.next != null) {
+			this.next.handleError(pException);
+		}
+	}
+
 }

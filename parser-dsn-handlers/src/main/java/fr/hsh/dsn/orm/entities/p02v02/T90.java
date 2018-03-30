@@ -19,7 +19,7 @@ public class T90 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="id_totalEnvoi")
+//	@Column(name="id_totalEnvoi")
 	private int idTotalEnvoi;
 
 	@Column(name="F001")

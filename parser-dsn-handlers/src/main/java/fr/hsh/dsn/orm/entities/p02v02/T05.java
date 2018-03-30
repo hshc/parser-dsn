@@ -19,7 +19,7 @@ public class T05 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="id_DSN")
+//	@Column(name="id_DSN")
 	private int idDsn;
 
 	@Column(name="F001")
