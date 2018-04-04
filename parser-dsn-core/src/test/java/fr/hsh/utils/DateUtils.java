@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 public class DateUtils {
 
 	private static DateUtils	sSingleton	= null;
-	private static boolean	sInit		= false;
+	private static boolean		sInit		= false;
 
 	private String				mDateFormat	= null;
 
@@ -60,7 +60,6 @@ public class DateUtils {
 		Date lDate = lCalendar.getTime();
 		return lDate;
 	}
-
 
 	public static void main(String[] args) {
 		GregorianCalendar lCalendar = new GregorianCalendar();

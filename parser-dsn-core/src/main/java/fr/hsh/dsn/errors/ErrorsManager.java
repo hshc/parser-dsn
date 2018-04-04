@@ -24,7 +24,7 @@ public class ErrorsManager {
 	}
 	
 	public static synchronized void initialize(final Locale pLocale) {
-		logger.trace(" > initialize()");
+		logger.trace(" > initialize(Locale pLocale)");
 
 		if (sSingleton == null) {
 			if (pLocale == null) {
@@ -35,7 +35,7 @@ public class ErrorsManager {
 			sInit = true;
 		}
 		
-		logger.trace(" < initialize()");
+		logger.trace(" < initialize(Locale pLocale)");
 	}
 	public static synchronized void initialize() {
 		logger.trace(" > initialize()");
@@ -49,7 +49,7 @@ public class ErrorsManager {
 	}
 	
 	public static synchronized void initialize(final String pErrorsMsgPath) {
-		logger.trace(" > initialize()");
+		logger.trace(" > initialize(String pErrorsMsgPath)");
 
 		if (sSingleton == null) {
 			final ClassLoader lClassLoader = Thread.currentThread().getContextClassLoader();
@@ -74,7 +74,7 @@ public class ErrorsManager {
 			}
 		}
 
-		logger.trace(" < initialize()");
+		logger.trace(" < initialize(String pErrorsMsgPath)");
 	}
 
 	public static boolean isInitialized() {

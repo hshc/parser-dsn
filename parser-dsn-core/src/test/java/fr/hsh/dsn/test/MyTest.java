@@ -1,4 +1,4 @@
-package fr.hsh.test;
+package fr.hsh.dsn.test;
 
 import static org.junit.Assert.fail;
 

@@ -6,7 +6,7 @@ public interface INeodesSectionBinder {
 	/**
 	 * @return Renvoie tableClass.
 	 */
-	public Class getTableClass();
+	public Class<?> getTableClass();
 
 	/**
 	 * @return Renvoie fieldName.

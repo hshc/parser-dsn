@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.util.StatusPrinter;
 import fr.hsh.dsn.bat.task.DsnStockJob;
-import fr.hsh.dsn.bat.task.WorkerFactory;
 import fr.hsh.dsn.bat.task.DsnStockJob.JobExecutionReport;
-import fr.hsh.dsn.errors.GestionErreurs;
+import fr.hsh.dsn.bat.task.WorkerFactory;
+import fr.hsh.dsn.errors.ErrorsManager;
 import fr.hsh.dsn.exception.NoGrammarFoundException;
 import fr.hsh.dsn.orm.persistence.MultiPersistenceUnitManager;
 import fr.hsh.dsn.parser.handler.IContentHandler;
@@ -237,8 +237,8 @@ public class LoadParserDSN {
 			lFormatDate = sDateFormat;
 		}
 
-		GestionErreurs.initialize(lErrorMsgPath);
-		if (GestionErreurs.isInitialized()) {
+		ErrorsManager.initialize(lErrorMsgPath);
+		if (ErrorsManager.isInitialized()) {
 			DateUtils.initialize(lFormatDate);
 		}
 		if (!MultiPersistenceUnitManager.isInitialized()) {

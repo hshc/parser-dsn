@@ -6,5 +6,5 @@ public interface INeodesBlocBinder {
 	/**
 	 * @return Renvoie tableClass.
 	 */
-	public Class getTableClass();
+	public Class<?> getTableClass();
 }

@@ -3,16 +3,9 @@ package fr.hsh.dsn.parser.handler.writer;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
@@ -28,6 +21,7 @@ import org.hibernate.jmx.StatisticsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.hsh.dsn.exception.ParseException;
 import fr.hsh.dsn.orm.constants.INeodesBlocBinder;
 import fr.hsh.dsn.orm.constants.INeodesSectionBinder;
 import fr.hsh.dsn.orm.constants.NeodesBinder;
@@ -36,10 +30,8 @@ import fr.hsh.dsn.orm.persistence.MultiPersistenceUnitManager.PUcode;
 import fr.hsh.dsn.parser.grammar.ComputedGrammar;
 import fr.hsh.dsn.parser.grammar.metamodel.Bloc;
 import fr.hsh.dsn.parser.grammar.metamodel.Section;
-import fr.hsh.dsn.parser.handler.IContentHandler;
-import fr.hsh.utils.Cipherer;
 
-public class DatabaseWriter implements IContentHandler {
+public class DatabaseWriter extends ComponentHandlerChainWriter {
 
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseWriter.class);
 	private static final EntityManagerFactory emf = MultiPersistenceUnitManager.getEntityManagerFactory(PUcode.DSN_STOCK);
@@ -60,38 +52,31 @@ public class DatabaseWriter implements IContentHandler {
 
 	private final String dsnVersion;
 	private EntityManager em = null;
-	private final Deque<Object> dtoStack = new ArrayDeque<Object>();
+	private final Deque<Object> dtoStack = new ArrayDeque<>();
 	private final int maxFlushSize;
 	private int nbEntities;
-
-	private Cipherer ciph = null;
 
 	public DatabaseWriter(final String pDsnVersion, final int pMaxFlushSize) {
 		this.dsnVersion = pDsnVersion;
 		this.maxFlushSize = pMaxFlushSize;
-		try {
-			this.ciph =  new Cipherer("toto", "my8lSalt".getBytes());
-		} catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Override
-	public void startDocument() {
+	public void startDocument() throws ParseException {
 		this.em = emf.createEntityManager();
 		this.em.getTransaction().begin();
+		super.startDocument();
 	}
 
 	@Override
-	public void startElement(Bloc pBloc) {
+	public void startElement(final Bloc pBloc) throws ParseException {
 		switch (pBloc.getName()) {
 		case ComputedGrammar.BOF: break;
 		case ComputedGrammar.ENVELOPE: break;
 		case ComputedGrammar.DSN: break;
 		default:
 			Bloc lParentBloc = (Bloc)pBloc.getParent();
-			Class parentTableClass = null;
+			Class<?> parentTableClass = null;
 			Object parentTable = null;
 			Object table = null;
 			INeodesBlocBinder blocBinder = NeodesBinder.getBlocBinder(this.dsnVersion, pBloc.getName());
@@ -132,22 +117,14 @@ public class DatabaseWriter implements IContentHandler {
 				logger.error("Le bloc '{}' n'a pas été déclaré programmatiquement pour la version '{}' de la norme NEODES", pBloc.getName(), this.dsnVersion);
 			}
 		}
+		super.startElement(pBloc);
 	}
 
 	@Override
-	public void compute(Section pSection, String pValue) {
-		if ("S21.G00.30.001".equals(pSection.getName())) {
-			if (this.ciph != null) {
-				try {
-					pValue = this.ciph.aesEncode(pValue);
-				} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	public void compute(final Section pSection, final String pValue) throws ParseException {
 		INeodesSectionBinder sb = NeodesBinder.getSectionBinder(this.dsnVersion, pSection.getName());
 		if (sb != null) {
-			Class tableClass = sb.getTableClass();
+			Class<?> tableClass = sb.getTableClass();
 			Object table = this.dtoStack.peek();
 			if (tableClass == table.getClass()) {
 				String methodName = "set"+sb.getFieldName();
@@ -162,10 +139,11 @@ public class DatabaseWriter implements IContentHandler {
 		} else {
 			logger.error("La rubrique '{}' n'a pas été déclarée programmatiquement pour la version '{}' de la norme NEODES", pSection.getName(), this.dsnVersion);
 		}
+		super.compute(pSection, pValue);
 	}
 
 	@Override
-	public void endElement(Bloc pBloc) {
+	public void endElement(Bloc pBloc) throws ParseException {
 		INeodesBlocBinder blocBinder = NeodesBinder.getBlocBinder(this.dsnVersion, pBloc.getName());
 		Object table = null;
 		if (ComputedGrammar.DSN.equals(pBloc.getName())) {
@@ -183,12 +161,14 @@ public class DatabaseWriter implements IContentHandler {
 				this.persist(table);
 			}
 		}
+		super.endElement(pBloc);
 	}
 
 	@Override
-	public void endDocument() {
+	public void endDocument() throws ParseException {
 		this.em.getTransaction().commit();
 		this.em.close();
+		super.endDocument();
 	}
 
 	public static Object methodCall(final Object pObject, final String pMethodName, final Class[] pParamsType, final Object[] pParams) throws NoSuchMethodException, SecurityException, IllegalAccessException,
@@ -213,15 +193,5 @@ public class DatabaseWriter implements IContentHandler {
 			logger.info("after flush");
 			//			this.em.clear();
 		}
-	}
-
-	@Override
-	public void handleUnreferencedSection(String pSectionName, String pPayload) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void handleError(Throwable pException) {
-		// TODO Auto-generated method stub
 	}
 }

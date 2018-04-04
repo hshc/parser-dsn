@@ -16,7 +16,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
-public class Cipherer__ {
+public class Cipherer {
 
 	private static final String wrappedKey="039E68A355057012D107B388071C742A3A7B10ABFBBEB0BE";
 	private static final String pwd ="toto";
@@ -24,7 +24,7 @@ public class Cipherer__ {
 
 	private final Key aesKey;
 
-	public Cipherer__(final String pPassword, final byte[] pSalt) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+	public Cipherer(final String pPassword, final byte[] pSalt) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
 		this.aesKey = getAesKey(pPassword, pSalt);
 	}
 
@@ -77,7 +77,6 @@ public class Cipherer__ {
 		byte[] out = new byte[h.length()/2];
 		char hexDigit[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
 				'B', 'C', 'D', 'E', 'F' };
-		StringBuilder buf = new StringBuilder();
 		for (int i = 0; i < h.length(); i+=2) {
 			char firstLetter = h.charAt(i);
 			char secondLetter = h.charAt(i+1);

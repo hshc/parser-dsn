@@ -27,7 +27,7 @@ public class ChainWriterWrapper implements IContentHandler {
 	}
 
 	@Override
-	public void startElement(Bloc pBloc) throws ParseException {
+	public void startElement(final Bloc pBloc) throws ParseException {
 		this.writer.startElement(pBloc);
 		if (this.next != null) {
 			this.next.startElement(pBloc);
@@ -35,7 +35,7 @@ public class ChainWriterWrapper implements IContentHandler {
 	}
 
 	@Override
-	public void compute(Section pSection, String pValue) throws ParseException {
+	public void compute(final Section pSection, final String pValue) throws ParseException {
 		this.writer.compute(pSection, pValue);
 		if (this.next != null) {
 			this.next.compute(pSection, pValue);
@@ -43,7 +43,7 @@ public class ChainWriterWrapper implements IContentHandler {
 	}
 
 	@Override
-	public void endElement(Bloc pBloc) throws ParseException {
+	public void endElement(final Bloc pBloc) throws ParseException {
 		this.writer.endElement(pBloc);
 		if (this.next != null) {
 			this.next.endElement(pBloc);
@@ -59,7 +59,7 @@ public class ChainWriterWrapper implements IContentHandler {
 	}
 
 	@Override
-	public void handleUnreferencedSection(String pSectionName, String pPayload) {
+	public void handleUnreferencedSection(final String pSectionName, String pPayload) {
 		this.writer.handleUnreferencedSection(pSectionName, pPayload);
 		if (this.next != null) {
 			this.next.handleUnreferencedSection(pSectionName, pPayload);
