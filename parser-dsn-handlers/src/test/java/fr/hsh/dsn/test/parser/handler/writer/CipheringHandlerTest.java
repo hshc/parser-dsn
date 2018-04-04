@@ -66,7 +66,7 @@ public class CipheringHandlerTest {
 		DSNParserFactory lParserFactory = null;
 		
 		try {
-			String lDatabase = "jdbc:hsqldb:file:"+ClassLoader.getSystemResource("HSQLDB").getPath()+"/DB";
+			String lDatabase = "jdbc:hsqldb:res:HSQLDB/DB";
 			
 			Map<String, String> lConfigurationOverrides = new HashMap<>();
 			lConfigurationOverrides.put("hibernate.connection.url", lDatabase);
