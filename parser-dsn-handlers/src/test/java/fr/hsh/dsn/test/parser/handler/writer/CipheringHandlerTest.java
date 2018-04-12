@@ -21,8 +21,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.core.util.StatusPrinter;
 import fr.hsh.dsn.errors.ErrorsManager;
 import fr.hsh.dsn.exception.GrammarViolationException;
 import fr.hsh.dsn.exception.NoGrammarFoundException;
@@ -38,9 +36,9 @@ import fr.hsh.utils.DateUtils;
 
 public class CipheringHandlerTest {
 
-	private static final Logger		logger		= LoggerFactory.getLogger(CipheringHandlerTest.class);
-	private DSNParser parser;
-	private Cipherer ciph = null;
+	private static final Logger	logger	= LoggerFactory.getLogger(CipheringHandlerTest.class);
+	private DSNParser			parser;
+	private Cipherer			ciph	= null;
 
 	@Before
 	public void setUp() throws Exception {
@@ -51,10 +49,6 @@ public class CipheringHandlerTest {
 		} catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
 			fail(e.getMessage());
 		}
-		
-		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-		// print logback's internal status
-		StatusPrinter.print(lc);
 		
 		ErrorsManager.initialize();
 		if (ErrorsManager.isInitialized()) {

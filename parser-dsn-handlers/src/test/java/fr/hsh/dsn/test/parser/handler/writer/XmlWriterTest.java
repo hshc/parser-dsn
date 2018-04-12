@@ -37,9 +37,6 @@ public class XmlWriterTest {
 	@Before
 	public void setUp() throws Exception {
 		logger.debug("> setUp()");
-		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-		// print logback's internal status
-		StatusPrinter.print(lc);
 		
 		ErrorsManager.initialize();
 		if (ErrorsManager.isInitialized()) {
@@ -59,19 +56,13 @@ public class XmlWriterTest {
 			GrammarFactory lGrammarFactory = new GrammarFactory(lEmf);
 			lParserFactory = new DSNParserFactory(lGrammarFactory.getGrammar(lDsnVersion));
 			lEmf.close();
-			parser = lParserFactory.newDSNParser();
+			this.parser = lParserFactory.newDSNParser();
 		} catch (NoGrammarFoundException e) {
 			fail(e.getMessage());
 			e.printStackTrace();
 		}
 		logger.debug("< setUp()");
 	}
-
-	@After
-	public void tearDown() throws Exception {
-		parser = null;
-	}
-
 
 	@Test
 	public void testParseDSN_NTA_1() throws URISyntaxException {
