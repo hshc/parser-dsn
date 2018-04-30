@@ -18,8 +18,6 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -32,13 +30,13 @@ import fr.hsh.dsn.errors.ErrorsManager;
 import fr.hsh.dsn.exception.GrammarViolationException;
 import fr.hsh.dsn.exception.NoGrammarFoundException;
 import fr.hsh.dsn.exception.ParseException;
+import fr.hsh.dsn.exception.SocleException;
 import fr.hsh.dsn.parser.grammar.ComputedGrammar;
 import fr.hsh.dsn.parser.grammar.metamodel.Bloc;
 import fr.hsh.dsn.parser.grammar.metamodel.GrammarFactory;
 import fr.hsh.dsn.parser.grammar.metamodel.Section;
 import fr.hsh.dsn.parser.handler.IContentHandler;
 import fr.hsh.dsn.parser.handler.NoOpContentHandler;
-import fr.hsh.socle.exception.core.SocleException;
 
 /**
  *  Description: Sax like parser for DSN files<br>

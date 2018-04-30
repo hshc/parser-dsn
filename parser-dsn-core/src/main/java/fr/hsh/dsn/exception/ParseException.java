@@ -1,15 +1,12 @@
 package fr.hsh.dsn.exception;
 
-import fr.hsh.socle.exception.core.ISocleException;
-import fr.hsh.socle.exception.core.SocleApplicativeException;
+public class ParseException extends SocleException {
 
-public class ParseException extends SocleApplicativeException {
-
-	public ParseException(String pCode, String pLibelleCourt, ISocleException pCause) {
+	public ParseException(String pCode, String pLibelleCourt, SocleException pCause) {
 		super(pCode, pLibelleCourt, pCause);
 	}
 
-	public ParseException(String pCode, String pLibelleCourt, String pMessage, ISocleException pCause) {
+	public ParseException(String pCode, String pLibelleCourt, String pMessage, SocleException pCause) {
 		super(pCode, pLibelleCourt, pMessage, pCause);
 	}
 

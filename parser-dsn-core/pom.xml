@@ -44,14 +44,6 @@
 			<artifactId>hibernate-envers</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>fr.hsh.socle.exception</groupId>
-			<artifactId>socle-exception</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
 			<exclusions>

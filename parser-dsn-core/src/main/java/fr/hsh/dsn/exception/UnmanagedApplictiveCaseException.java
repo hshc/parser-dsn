@@ -1,8 +1,6 @@
 package fr.hsh.dsn.exception;
 
-import fr.hsh.socle.exception.core.SocleApplicativeException;
-
-public class UnmanagedApplictiveCaseException extends SocleApplicativeException {
+public class UnmanagedApplictiveCaseException extends SocleException {
 
 	/**
 	 * Commentaire pour <code>serialVersionUID</code>
