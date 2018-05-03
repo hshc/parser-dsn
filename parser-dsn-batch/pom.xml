@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>fr.hsh.dsn</groupId>
 		<artifactId>parser-dsn</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 	
 	<artifactId>parser-dsn-batch</artifactId>
@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>fr.hsh.dsn</groupId>
 			<artifactId>parser-dsn-handlers</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
 	<build>
